@@ -1,0 +1,37 @@
+@startuml
+
+SyncService <- HomeFragment :init
+AlarmManager -> SyncService :init
+SyncService -> Sync
+Database -> Repositories
+Repositories -left> UI
+
+class SyncService {
+    initSync()
+}
+
+class HomeFragment {
+    Sync button
+}
+
+class AlarmManager {
+    every 6 hour
+}
+
+class Repositories {
+    receives continuous updates
+}
+
+namespace SDK #DDDDDD {
+   package Database <<Database>> {
+   }
+
+   package Sync <<Cloud>> #FFFFFF {
+        class MetaDataSync{
+        }
+        class DataSync{
+        }
+   }
+}
+
+@enduml

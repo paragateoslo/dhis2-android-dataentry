@@ -103,7 +103,12 @@ public class HomeFragment extends BaseFragment implements HomeView {
 
     @Override
     public Consumer<List<HomeViewModel>> swapData() {
-        return homeEntities -> homeViewModelAdapter.swapData(homeEntities);
+        return new Consumer<List<HomeViewModel>>() {
+            @Override
+            public void accept(List<HomeViewModel> homeEntities) throws Exception {
+                homeViewModelAdapter.swapData(homeEntities);
+            }
+        };
     }
 
     @Override

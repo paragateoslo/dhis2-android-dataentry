@@ -1,0 +1,46 @@
+@startuml
+
+View <- Presenter
+Presenter <-- Repository
+
+Repository <. "1..*" ViewModel : creates
+Repository <-- SDK
+View --> Fragment
+View --> Activity
+Fragment --> Adapter
+Activity --> Adapter
+
+class Fragment {
+    renderData(List<ViewModel>);
+}
+
+class Activity {
+    renderData(List<ViewModel>);
+}
+
+class Presenter {
+ onAttach(View) -> Repository.fetchFromDb()
+  -> View.renderData(List<ViewModel>)
+}
+
+class Repository {
+    fetchFromDb() -> emit List<ViewModel>
+}
+
+interface View {
+    renderData(List<ViewModel>);
+}
+
+class ViewModel {
+immutable data
+}
+
+class Adapter<ViewModel>
+
+
+namespace SDK #DDDDDD {
+   package Database <<Database>> {
+   }
+}
+
+@enduml

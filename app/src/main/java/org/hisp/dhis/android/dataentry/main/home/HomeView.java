@@ -16,4 +16,3 @@ interface HomeView extends View {
     void renderError(String message);
 }
 
-
