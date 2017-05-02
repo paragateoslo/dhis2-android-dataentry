@@ -50,7 +50,7 @@ public class FormRepositoryImpl implements FormRepository {
 
     @NonNull
     @Override
-    public Flowable<List<SectionViewModel>> sections(String event, String programStageUid) {
+    public Flowable<List<DataEntryViewArguments>> sections(String event, String programStageUid) {
 
         QueryObservable sectionQuery = briteDatabase
                 .createQuery(ProgramStageSectionModel.TABLE, SELECT_SECTIONS, programStageUid);
@@ -59,14 +59,14 @@ public class FormRepositoryImpl implements FormRepository {
 
         if (sectionQuery.count().toBlocking().first() != 0) {
             return toV2Flowable(sectionQuery.
-                    mapToList(cursor -> SectionViewModel.create(event, cursor.getString(0), cursor.getString(1),
-                            SectionViewModel.Type.SECTION)));
+                    mapToList(cursor -> DataEntryViewArguments.create(event, cursor.getString(0), cursor.getString(1),
+                            DataEntryViewArguments.Type.SECTION)));
         } else {
-            // The ProgramStage has no sections. Return a single SectionViewModel of type PROGRAM_STAGE
+            // The ProgramStage has no sections. Return a single DataEntryViewArguments of type PROGRAM_STAGE
             // Label is empty because the FormFragment.TabLayout is hidden
-            List<SectionViewModel> singleSectionCollection = new ArrayList<>();
-            singleSectionCollection.add(SectionViewModel.create(event, programStageUid, "",
-                    SectionViewModel.Type.PROGRAM_STAGE));
+            List<DataEntryViewArguments> singleSectionCollection = new ArrayList<>();
+            singleSectionCollection.add(DataEntryViewArguments.create(event, programStageUid, "",
+                    DataEntryViewArguments.Type.PROGRAM_STAGE));
             return Flowable.just(singleSectionCollection);
         }
     }

@@ -15,8 +15,8 @@ public class FormModule {
     @Provides
     @PerFragment
     FormPresenter formPresenter(SchedulerProvider schedulerProvider,
-                                FormRepository homeRepository) {
-        return new FormPresenterImpl(schedulerProvider, homeRepository);
+                                FormRepository formRepository) {
+        return new FormPresenterImpl(schedulerProvider, formRepository);
     }
 
     @Provides

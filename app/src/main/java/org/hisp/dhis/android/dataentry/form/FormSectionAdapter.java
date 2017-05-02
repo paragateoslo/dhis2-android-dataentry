@@ -5,44 +5,44 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import org.hisp.dhis.android.dataentry.form.section.SectionFragment;
+import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FormSectionAdapter extends FragmentStatePagerAdapter {
 
-    private final List<SectionViewModel> sectionViewModels;
+    private final List<DataEntryViewArguments> dataEntryViewArgumentses;
 
     public FormSectionAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-        this.sectionViewModels = new ArrayList<>();
+        this.dataEntryViewArgumentses = new ArrayList<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return SectionFragment.newInstance(sectionViewModels.get(position));
+        return DataEntryFragment.newInstance(dataEntryViewArgumentses.get(position));
     }
 
     @Override
     public int getCount() {
-        return sectionViewModels.size();
+        return dataEntryViewArgumentses.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return sectionViewModels.get(position).label();
+        return dataEntryViewArgumentses.get(position).label();
     }
 
     @NonNull
-    public List<SectionViewModel> getData() {
-        return sectionViewModels;
+    public List<DataEntryViewArguments> getData() {
+        return dataEntryViewArgumentses;
     }
 
-    public void swapData(List<SectionViewModel> sectionViewModels) {
+    public void swapData(List<DataEntryViewArguments> dataEntryViewArgumentses) {
         // TODO: Use DiffUtil for sections as well?
-        this.sectionViewModels.clear();
-        this.sectionViewModels.addAll(sectionViewModels);
+        this.dataEntryViewArgumentses.clear();
+        this.dataEntryViewArgumentses.addAll(dataEntryViewArgumentses);
         notifyDataSetChanged();
     }
 }

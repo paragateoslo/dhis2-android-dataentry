@@ -3,6 +3,7 @@ package org.hisp.dhis.android.dataentry.form;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -24,14 +25,9 @@ import io.reactivex.functions.Consumer;
 public class FormFragment extends BaseFragment implements FormView {
 
     // Fragment arguments
-    private static final String ARG_EVENT = "event";
-    private static final String ARG_PROGRAM = "program";
-    private static final String ARG_PROGRAM_STAGE = "programStage";
-    private static final String TAG = "FormFragment";
+    private static final String FORM_VIEW_ARGUMENTS = "formViewArguments";
 
-    private String event;
-    private String program;
-    private String programStage;
+    private FormViewArguments formViewArguments;
 
     // Views
     //@BindView(R.id.coordinatorlayout_form)
@@ -60,12 +56,10 @@ public class FormFragment extends BaseFragment implements FormView {
         // Required empty public constructor
     }
 
-    public static FormFragment newInstance(String event, String program, String programStage) {
+    public static Fragment newInstance(FormViewArguments formViewArguments) {
         FormFragment fragment = new FormFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_EVENT, event);
-        args.putString(ARG_PROGRAM, program);
-        args.putString(ARG_PROGRAM_STAGE, programStage);
+        args.putParcelable(FORM_VIEW_ARGUMENTS, formViewArguments);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,9 +68,7 @@ public class FormFragment extends BaseFragment implements FormView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            event = getArguments().getString(ARG_EVENT);
-            program = getArguments().getString(ARG_PROGRAM);
-            programStage = getArguments().getString(ARG_PROGRAM_STAGE);
+            formViewArguments = getArguments().getParcelable(FORM_VIEW_ARGUMENTS);
         }
     }
 
@@ -117,7 +109,7 @@ public class FormFragment extends BaseFragment implements FormView {
     }
 
     @Override
-    public Consumer<List<SectionViewModel>> renderSectionViewModels() {
+    public Consumer<List<DataEntryViewArguments>> renderSectionViewModels() {
         return sectionViewModels -> {
             formSectionAdapter.swapData(sectionViewModels);
         };
@@ -129,18 +121,8 @@ public class FormFragment extends BaseFragment implements FormView {
     }
 
     @Override
-    public String event() {
-        return event;
-    }
-
-    @Override
-    public String program() {
-        return program;
-    }
-
-    @Override
-    public String programStage() {
-        return programStage;
+    public FormViewArguments formViewArguments() {
+        return formViewArguments;
     }
 
     @Override

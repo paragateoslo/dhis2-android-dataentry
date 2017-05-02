@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import org.hisp.dhis.android.dataentry.commons.dagger.PerUser;
 import org.hisp.dhis.android.dataentry.form.FormComponent;
 import org.hisp.dhis.android.dataentry.form.FormModule;
-import org.hisp.dhis.android.dataentry.form.section.SectionComponent;
-import org.hisp.dhis.android.dataentry.form.section.SectionModule;
+import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryComponent;
+import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryModule;
 import org.hisp.dhis.android.dataentry.main.MainComponent;
 import org.hisp.dhis.android.dataentry.main.MainModule;
 import org.hisp.dhis.android.dataentry.main.home.HomeComponent;
@@ -35,5 +35,5 @@ public interface UserComponent {
     FormComponent plus(@NonNull FormModule formModule);
 
     @NonNull
-    SectionComponent plus(@NonNull SectionModule sectionModule);
+    DataEntryComponent plus(@NonNull DataEntryModule dataEntryModule);
 }

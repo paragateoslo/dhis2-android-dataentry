@@ -35,7 +35,7 @@
     </Match>
 
     <Match>
-        <!-- FindBugs complains when a constructor reads a field that has been initialized by ButterKnife -->
+        <!-- FindBugs complains when a constructor reads a field that has been instantiated by ButterKnife -->
         <Bug pattern="UR_UNINIT_READ"/>
     </Match>
 

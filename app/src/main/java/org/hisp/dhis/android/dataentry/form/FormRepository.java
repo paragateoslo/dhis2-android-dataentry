@@ -12,5 +12,5 @@ public interface FormRepository {
     Flowable<String> title(String programUid, String programStageUid);
 
     @NonNull
-    Flowable<List<SectionViewModel>> sections(String event, String programStageUid);
+    Flowable<List<DataEntryViewArguments>> sections(String event, String programStageUid);
 }

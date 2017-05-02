@@ -7,8 +7,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
+import static org.hisp.dhis.android.dataentry.commons.utils.Preconditions.isNull;
+
 /**
- * This TabLayout will be hidden if the attached adapter has less than 2 elements
+ * A TabLayout that automatically hides when the attached adapter has less than 2 elements
  */
 public class AutoHidingTabLayout extends TabLayout {
 
@@ -29,40 +31,43 @@ public class AutoHidingTabLayout extends TabLayout {
 
     @Override
     public void setupWithViewPager(@Nullable ViewPager viewPager) {
+
+        isNull(viewPager, "viewPager == null");
+        isNull(viewPager.getAdapter(), "viewPager.getAdapter == null. You must set an adapter on the ViewPager before" +
+                " setting up the AutoHidingTabLayout");
+
         this.viewPager = viewPager;
 
         AdapterChangeObserver adapterChangeObserver = new AdapterChangeObserver();
+        viewPager.getAdapter().registerDataSetObserver(adapterChangeObserver);
+        viewPager.addOnAdapterChangeListener((viewPager1, oldAdapter, newAdapter) -> {
+            if (newAdapter != null) {
+                newAdapter.registerDataSetObserver(adapterChangeObserver);
+            }
+        });
 
-        if (viewPager != null && viewPager.getAdapter() != null && viewPager.getAdapter().getCount() < 2) {
+        toggleVisibility();
+
+        super.setupWithViewPager(viewPager);
+    }
+
+    private void toggleVisibility() {
+        if (viewPager.getAdapter().getCount() < 2) {
             setVisibility(GONE);
-
-            viewPager.getAdapter().registerDataSetObserver(adapterChangeObserver);
-
-            viewPager.addOnAdapterChangeListener((viewPager1, oldAdapter, newAdapter) -> {
-                if (newAdapter != null) {
-                    newAdapter.registerDataSetObserver(adapterChangeObserver);
-                }
-            });
         } else {
             setVisibility(VISIBLE);
         }
-
-        super.setupWithViewPager(viewPager);
     }
 
     private class AdapterChangeObserver extends DataSetObserver {
 
         @Override
         public void onChanged() {
-            if (viewPager != null && viewPager.getAdapter() != null && viewPager.getAdapter().getCount() == 1) {
-                setVisibility(GONE);
-            }
-        }
 
-        @Override
-        public void onInvalidated() {
-            if (viewPager != null && viewPager.getAdapter() != null && viewPager.getAdapter().getCount() == 1) {
+            if (viewPager == null || viewPager.getAdapter() == null) {
                 setVisibility(GONE);
+            } else {
+                toggleVisibility();
             }
         }
     }

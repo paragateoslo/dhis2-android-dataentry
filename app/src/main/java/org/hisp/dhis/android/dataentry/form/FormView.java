@@ -8,13 +8,9 @@ import io.reactivex.functions.Consumer;
 
 public interface FormView extends View {
 
-    Consumer<List<SectionViewModel>> renderSectionViewModels();
+    Consumer<List<DataEntryViewArguments>> renderSectionViewModels();
 
     Consumer<String> renderTitle();
 
-    String event();
-
-    String program();
-
-    String programStage();
+    FormViewArguments formViewArguments();
 }

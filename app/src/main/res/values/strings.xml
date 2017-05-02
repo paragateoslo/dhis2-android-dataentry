@@ -45,6 +45,8 @@
     <string name="enter_positive_integer_or_zero">Enter positive integer or zero</string>
     <string name="enter_positive_integer">Enter positive integer</string>
     <string name="enter_date">Enter date</string>
+    <string name="enter_coordinates">Enter coordinates</string>
+    <string name="enter_option_set">Select or search from the list</string>
 
     <!-- Buttons -->
     <string name="today_date">Today\'s date</string>

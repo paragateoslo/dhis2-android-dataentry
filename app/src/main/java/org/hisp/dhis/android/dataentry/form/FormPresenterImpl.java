@@ -29,19 +29,21 @@ class FormPresenterImpl implements FormPresenter {
         if (view instanceof FormView) {
             FormView formView = (FormView) view;
 
-            compositeDisposable.add(formRepository.title(formView.program(), formView.programStage())
+            compositeDisposable.add(formRepository.title(formView.formViewArguments().programUid(),
+                    formView.formViewArguments().programStageUid())
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
                     .subscribe(
                             formView.renderTitle(),
-                            throwable -> Timber.e(throwable)));
+                            Timber::e));
 
-            compositeDisposable.add(formRepository.sections(formView.event(), formView.programStage())
+            compositeDisposable.add(formRepository.sections(formView.formViewArguments().uid(),
+                    formView.formViewArguments().programStageUid())
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
                     .subscribe(
                             formView.renderSectionViewModels(),
-                            throwable -> Timber.e(throwable)));
+                            Timber::e));
         }
     }
 
