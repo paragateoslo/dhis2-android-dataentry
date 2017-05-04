@@ -1,4 +1,4 @@
-package org.hisp.dhis.android.dataentry.form;
+package org.hisp.dhis.android.dataentry.form.dataentry;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryFragment;
+import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryViewArguments;
 
 import java.util.ArrayList;
 import java.util.List;

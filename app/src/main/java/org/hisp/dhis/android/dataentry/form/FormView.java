@@ -1,6 +1,7 @@
 package org.hisp.dhis.android.dataentry.form;
 
 import org.hisp.dhis.android.dataentry.commons.ui.View;
+import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryViewArguments;
 
 import java.util.List;
 

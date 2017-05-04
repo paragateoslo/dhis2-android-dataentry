@@ -12,7 +12,6 @@ import org.hisp.dhis.android.core.program.ProgramModel;
 import org.hisp.dhis.android.core.program.ProgramStageModel;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityDataValueModel;
 import org.hisp.dhis.android.dataentry.commons.tuples.Pair;
-import org.hisp.dhis.android.dataentry.form.DataEntryViewArguments;
 import org.hisp.dhis.android.dataentry.form.dataentry.viewmodels.FormViewModel;
 import org.hisp.dhis.android.dataentry.form.dataentry.viewmodels.FormViewModelFactory;
 import org.hisp.dhis.android.dataentry.rules.DatabaseRule;

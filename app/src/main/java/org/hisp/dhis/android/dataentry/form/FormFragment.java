@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import org.hisp.dhis.android.dataentry.R;
 import org.hisp.dhis.android.dataentry.commons.ui.BaseFragment;
+import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryViewArguments;
 
 import java.util.List;
 

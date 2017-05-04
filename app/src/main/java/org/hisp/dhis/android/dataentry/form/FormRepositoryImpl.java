@@ -8,6 +8,7 @@ import com.squareup.sqlbrite.QueryObservable;
 import org.hisp.dhis.android.core.program.ProgramModel;
 import org.hisp.dhis.android.core.program.ProgramStageModel;
 import org.hisp.dhis.android.core.program.ProgramStageSectionModel;
+import org.hisp.dhis.android.dataentry.form.dataentry.DataEntryViewArguments;
 
 import java.util.ArrayList;
 import java.util.Arrays;

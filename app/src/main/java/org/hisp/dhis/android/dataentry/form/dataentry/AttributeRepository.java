@@ -6,7 +6,6 @@ import com.squareup.sqlbrite.BriteDatabase;
 
 import org.hisp.dhis.android.core.user.UserModel;
 import org.hisp.dhis.android.dataentry.commons.tuples.Pair;
-import org.hisp.dhis.android.dataentry.form.DataEntryViewArguments;
 import org.hisp.dhis.android.dataentry.form.dataentry.viewmodels.FormViewModel;
 import org.hisp.dhis.android.dataentry.form.dataentry.viewmodels.FormViewModelFactory;
 

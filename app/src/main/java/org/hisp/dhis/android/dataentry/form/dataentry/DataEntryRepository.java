@@ -3,7 +3,6 @@ package org.hisp.dhis.android.dataentry.form.dataentry;
 import android.support.annotation.NonNull;
 
 import org.hisp.dhis.android.dataentry.commons.tuples.Pair;
-import org.hisp.dhis.android.dataentry.form.DataEntryViewArguments;
 import org.hisp.dhis.android.dataentry.form.dataentry.viewmodels.FormViewModel;
 
 import java.util.List;
