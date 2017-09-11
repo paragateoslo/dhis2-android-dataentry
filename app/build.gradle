@@ -7,8 +7,10 @@ apply from: rootProject.file("plugins/android-checkstyle.gradle")
 apply from: rootProject.file("plugins/android-errorprone.gradle")
 apply from: rootProject.file("plugins/android-paperwork.gradle")
 apply from: rootProject.file("plugins/android-dexcount.gradle")
-apply from: rootProject.file("plugins/android-findbugs.gradle")
 apply from: rootProject.file("plugins/android-pmd.gradle")
+
+// This has been disabled because of issues with multi-dex
+// apply from: rootProject.file("plugins/android-findbugs.gradle")
 
 def versions = rootProject.ext.versions
 def libraries = rootProject.ext.libraries
@@ -44,7 +46,7 @@ def getFabricKey = {
 
 def versionMajor = 0
 def versionMinor = 1
-def versionPatch = 0
+def versionPatch = 2
 def versionBuild = 0
 
 android {
@@ -57,6 +59,7 @@ android {
         targetSdkVersion versions.sdk
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        multiDexEnabled true
 
         // jUnit test runner for android
         testInstrumentationRunner "org.hisp.dhis.android.dataentry.DhisInstrumentationTestsRunner"
@@ -117,7 +120,18 @@ android {
 
             // jacoco test coverage reports both for
             // androidTest and test source sets
-            testCoverageEnabled = true
+            testCoverageEnabled = false
+
+            // Disable fabric build ID generation for debug builds
+            ext.enableCrashlytics = false
+
+            // Using dataentry.jks to sign debug build type.
+            signingConfig = signingConfigs.debug
+        }
+        alpha {
+            // custom application suffix which allows to
+            // install debug and release builds at the same time
+            applicationIdSuffix = ".alpha"
 
             // Disable fabric build ID generation for debug builds
             ext.enableCrashlytics = false
@@ -130,6 +144,22 @@ android {
             ext.enableCrashlytics = true
         }
     }
+
+    productFlavors {
+        mHealth4Africa {
+            applicationId "org.hisp.dhis.android.dataentry.mHeakth4Africa"
+        }
+
+        main {
+
+        }
+    }
+
+    sourceSets {
+        androidTest {
+            assets.srcDirs = ['src/androidTest/assets/']
+        }
+    }
 }
 
 spoon {
@@ -138,7 +168,6 @@ spoon {
 }
 
 dependencies {
-
     compile "hu.supercluster:paperwork:${libraries.paperwork}"
 
     // Support libraries
@@ -146,12 +175,26 @@ dependencies {
     compile "com.android.support:support-annotations:${libraries.support}"
     compile "com.android.support:cardview-v7:${libraries.support}"
     compile "com.android.support:design:${libraries.support}"
+    compile "com.android.support:multidex:${libraries.multidex}"
 
     // Other
     compile "com.github.castorflex.smoothprogressbar:library-circular:${libraries.progressbar}"
+    provided "com.google.code.findbugs:annotations:${libraries.findbugs}"
 
-    // dhis2 libraries
+    // Explicitly compiling JSR305 in order to resolve
+    // dependency conflict between .apk and test .apk
+    // compile "com.google.code.findbugs:jsr305:${libraries.jsr305}"
+
+    // Core module of the DHIS 2 Android SDK
     compile "org.hisp.dhis:android-core:${libraries.dhis2sdk}"
+
+    // RuleEngine module of the DHIS 2 Android SDK
+    compile ("org.hisp.dhis:core-rules:${libraries.dhis2sdk}") {
+        exclude group: "com.google.code.findbugs", module: "jsr305"
+    }
+    compile ("org.hisp.dhis:android-rules:${libraries.dhis2sdk}") {
+        exclude group: "com.google.code.findbugs", module: "jsr305"
+    }
 
     // Fabric tools
     compile("com.crashlytics.sdk.android:crashlytics:${libraries.crashlytics}@aar") {
@@ -171,7 +214,7 @@ dependencies {
     // annotation processor which hoops up into compilation process
     provided "com.google.auto.value:auto-value:${libraries.autovalue}"
     annotationProcessor "com.google.auto.value:auto-value:${libraries.autovalue}"
-    
+
     // Extension which generates mappers for work with cursors
     annotationProcessor "com.gabrielittner.auto.value:auto-value-cursor:${libraries.autovaluecursor}"
     annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:${libraries.autovalueparcel}"
@@ -179,6 +222,7 @@ dependencies {
     // Square libraries
     debugCompile "com.squareup.leakcanary:leakcanary-android:${libraries.leakcanary}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${libraries.leakcanary}"
+    alphaCompile "com.squareup.leakcanary:leakcanary-android-no-op:${libraries.leakcanary}"
     compile "com.squareup.sqlbrite:sqlbrite:${libraries.sqlbrite}"
 
     // Jake Wharton libraries
@@ -206,15 +250,19 @@ dependencies {
 
     androidTestCompile("com.android.support.test.espresso:espresso-idling-resource:${libraries.espresso}") {
         exclude module: "support-annotations"
+        exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     androidTestCompile("com.android.support.test.espresso:espresso-core:${libraries.espresso}") {
         exclude module: "support-annotations"
+        exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     androidTestCompile("com.android.support.test.espresso:espresso-intents:${libraries.espresso}") {
         exclude module: "support-annotations"
+        exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:${libraries.espresso}") {
         // Causes IncompatibleClassChangeError
+        exclude group: "com.google.code.findbugs", module: "jsr305"
         exclude module: "support-annotations"
         exclude module: "recyclerview-v7"
         exclude module: "appcompat-v7"

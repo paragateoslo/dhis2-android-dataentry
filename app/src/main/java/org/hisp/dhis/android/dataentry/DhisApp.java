@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -20,9 +21,10 @@ import org.hisp.dhis.android.dataentry.commons.database.DbModule;
 import org.hisp.dhis.android.dataentry.commons.schedulers.SchedulerModule;
 import org.hisp.dhis.android.dataentry.commons.schedulers.SchedulersProviderImpl;
 import org.hisp.dhis.android.dataentry.commons.utils.CrashReportingTree;
+import org.hisp.dhis.android.dataentry.form.FormComponent;
+import org.hisp.dhis.android.dataentry.form.FormModule;
 import org.hisp.dhis.android.dataentry.login.LoginComponent;
 import org.hisp.dhis.android.dataentry.login.LoginModule;
-import org.hisp.dhis.android.dataentry.main.MainComponent;
 import org.hisp.dhis.android.dataentry.server.ServerComponent;
 import org.hisp.dhis.android.dataentry.server.ServerModule;
 import org.hisp.dhis.android.dataentry.server.UserManager;
@@ -66,7 +68,7 @@ public class DhisApp extends Application implements Components {
 
     @Nullable
     @PerActivity
-    MainComponent mainComponent;
+    FormComponent formComponent;
 
     @Nullable
     RefWatcher refWatcher;
@@ -74,6 +76,9 @@ public class DhisApp extends Application implements Components {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // temporarily enable multi-dex
+        MultiDex.install(this);
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // this process will be used by
@@ -251,5 +256,26 @@ public class DhisApp extends Application implements Components {
     @Override
     public void releaseUserComponent() {
         userComponent = null;
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    // Form component
+    ////////////////////////////////////////////////////////////////////////
+
+    @NonNull
+    @Override
+    public FormComponent createFormComponent(@NonNull FormModule formModule) {
+        return (formComponent = userComponent.plus(formModule));
+    }
+
+    @Nullable
+    @Override
+    public FormComponent formComponent() {
+        return formComponent;
+    }
+
+    @Override
+    public void releaseFormComponent() {
+        formComponent = null;
     }
 }

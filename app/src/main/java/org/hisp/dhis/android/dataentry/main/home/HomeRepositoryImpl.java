@@ -23,10 +23,11 @@ class HomeRepositoryImpl implements HomeRepository {
      SELECT * FROM
      (SELECT uid,displayName,'TRACKED_ENTITY' AS homeViewModelType FROM TrackedEntity
      UNION SELECT
-     uid,displayName,'PROGRAM' AS homeViewModelType FROM Program WHERE Program.programType = 'WITHOUT_REGISTRATION')
+     uid,displayName,'PROGRAM_NO_REG' AS homeViewModelType FROM Program WHERE Program.programType =
+     'WITHOUT_REGISTRATION')
      ORDER BY homeViewModelType DESC
      */
-    private final static String SELECT_HOME_ENTITIES = String.format(Locale.US,
+    private final static String SELECT_HOME_VIEW_MODELS = String.format(Locale.US,
             "SELECT * FROM " +
                     "(SELECT %s,%s,'%s' AS %s FROM %s " +
                     "UNION SELECT %s,%s,'%s' AS %s FROM %s WHERE %s.%s = '%s') " +
@@ -51,7 +52,7 @@ class HomeRepositoryImpl implements HomeRepository {
     @Override
     public Observable<List<HomeViewModel>> homeViewModels() {
         return RxJavaInterop.toV2Observable(
-                briteDatabase.createQuery(TABLE_SET, SELECT_HOME_ENTITIES)
+                briteDatabase.createQuery(TABLE_SET, SELECT_HOME_VIEW_MODELS)
                         .mapToList(HomeViewModel::fromCursor));
     }
 }

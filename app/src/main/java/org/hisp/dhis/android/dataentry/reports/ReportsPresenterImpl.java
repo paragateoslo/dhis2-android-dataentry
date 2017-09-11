@@ -2,11 +2,10 @@ package org.hisp.dhis.android.dataentry.reports;
 
 import android.support.annotation.NonNull;
 
-import org.hisp.dhis.android.dataentry.commons.ui.View;
 import org.hisp.dhis.android.dataentry.commons.schedulers.SchedulerProvider;
 
 import io.reactivex.disposables.CompositeDisposable;
-import timber.log.Timber;
+import rx.exceptions.OnErrorNotImplementedException;
 
 final class ReportsPresenterImpl implements ReportsPresenter {
 
@@ -32,14 +31,18 @@ final class ReportsPresenterImpl implements ReportsPresenter {
     }
 
     @Override
-    public void onAttach(@NonNull View view) {
-        if (view instanceof ReportsView) {
-            ReportsView reportsView = (ReportsView) view;
-            compositeDisposable.add(reportsRepository.reports(reportsArguments.entityUid())
-                    .subscribeOn(schedulerProvider.io())
-                    .observeOn(schedulerProvider.ui())
-                    .subscribe(reportsView.renderReportViewModels(), Timber::e));
-        }
+    public void onAttach(@NonNull ReportsView reportsView) {
+        compositeDisposable.add(reportsView.createReportsActions()
+                .map(action -> reportsArguments.entityUid())
+                .subscribe(reportsView.createReport(), throwable -> {
+                    throw new OnErrorNotImplementedException(throwable);
+                }));
+        compositeDisposable.add(reportsRepository.reports(reportsArguments.entityUid())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(reportsView.renderReportViewModels(), throwable -> {
+                    throw new OnErrorNotImplementedException(throwable);
+                }));
     }
 
     @Override

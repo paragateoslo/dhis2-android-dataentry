@@ -31,12 +31,11 @@ public final class ReportsModule {
     @Provides
     ReportsNavigator navigator() {
         switch (reportsArguments.entityType()) {
-            case ReportsArguments.TYPE_TEIS:
-                return new TeisNavigatorImpl(activity, reportsArguments.entityName());
             case ReportsArguments.TYPE_EVENTS:
-                return new SingleEventsNavigatorImpl();
+                return new SingleEventsNavigatorImpl(activity,
+                        activity.getString(R.string.create_event));
             case ReportsArguments.TYPE_ENROLLMENTS:
-                return new EnrollmentsNavigatorImpl();
+                return new EnrollmentsNavigatorImpl(activity);
             default:
                 throw new IllegalArgumentException("Unsupported entity type: "
                         + reportsArguments.entityType());
@@ -47,8 +46,6 @@ public final class ReportsModule {
     @Provides
     ReportsRepository reportsRepository(BriteDatabase briteDatabase) {
         switch (reportsArguments.entityType()) {
-            case ReportsArguments.TYPE_TEIS:
-                return new TeisRepositoryImpl(briteDatabase);
             case ReportsArguments.TYPE_EVENTS:
                 return new SingleEventsRepositoryImpl(briteDatabase);
             case ReportsArguments.TYPE_ENROLLMENTS:
@@ -64,8 +61,8 @@ public final class ReportsModule {
 
     @PerActivity
     @Provides
-    ReportsPresenter reportsPresenter(ReportsRepository reportsRepository,
-            SchedulerProvider schedulerProvider) {
+    ReportsPresenter reportsPresenter(@NonNull ReportsRepository reportsRepository,
+            @NonNull SchedulerProvider schedulerProvider) {
         return new ReportsPresenterImpl(reportsArguments, schedulerProvider, reportsRepository);
     }
 }

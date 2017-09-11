@@ -2,15 +2,16 @@ package org.hisp.dhis.android.dataentry.main;
 
 import android.support.annotation.NonNull;
 
+import org.hisp.dhis.android.core.D2;
 import org.hisp.dhis.android.core.user.UserModel;
+import org.hisp.dhis.android.dataentry.commons.schedulers.SchedulerProvider;
 import org.hisp.dhis.android.dataentry.commons.ui.View;
 import org.hisp.dhis.android.dataentry.user.UserRepository;
-import org.hisp.dhis.android.dataentry.commons.schedulers.SchedulerProvider;
 
 import java.util.Locale;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observables.ConnectableObservable;
+import io.reactivex.flowables.ConnectableFlowable;
 import timber.log.Timber;
 
 import static org.hisp.dhis.android.dataentry.commons.utils.Preconditions.isNull;
@@ -20,9 +21,12 @@ class MainPresenterImpl implements MainPresenter {
     private final SchedulerProvider schedulerProvider;
     private final UserRepository userRepository;
     private final CompositeDisposable compositeDisposable;
+    private final D2 d2;
 
-    MainPresenterImpl(@NonNull SchedulerProvider schedulerProvider,
+    MainPresenterImpl(@NonNull D2 d2,
+                      @NonNull SchedulerProvider schedulerProvider,
                       @NonNull UserRepository userRepository) {
+        this.d2 = d2;
         this.schedulerProvider = schedulerProvider;
         this.userRepository = userRepository;
         this.compositeDisposable = new CompositeDisposable();
@@ -35,7 +39,7 @@ class MainPresenterImpl implements MainPresenter {
         if (view instanceof MainView) {
             MainView mainView = (MainView) view;
 
-            ConnectableObservable<UserModel> userObservable = userRepository.me()
+            ConnectableFlowable<UserModel> userObservable = userRepository.me()
                     .subscribeOn(schedulerProvider.io())
                     .observeOn(schedulerProvider.ui())
                     .publish();
@@ -86,5 +90,14 @@ class MainPresenterImpl implements MainPresenter {
             initials += String.valueOf(user.surname().charAt(0));
         }
         return initials.toUpperCase(Locale.US);
+    }
+
+    @Override
+    public void logOut() {
+        try {
+            d2.logOut().call();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 }

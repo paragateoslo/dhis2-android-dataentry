@@ -51,7 +51,7 @@ class HomeViewModelAdapter extends RecyclerView.Adapter {
         return homeViewModels.size();
     }
 
-    public void swapData(@Nullable List<HomeViewModel> homeViewModels) {
+    void swapData(@Nullable List<HomeViewModel> homeViewModels) {
         this.homeViewModels.clear();
 
         if (homeViewModels != null) {
@@ -61,11 +61,11 @@ class HomeViewModelAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void setOnHomeItemClickListener(OnHomeItemClicked onHomeItemClicked) {
+    void setOnHomeItemClickListener(OnHomeItemClicked onHomeItemClicked) {
         this.onHomeItemClickListener = onHomeItemClicked;
     }
 
-    public interface OnHomeItemClicked {
+    interface OnHomeItemClicked {
         void onHomeItemClicked(HomeViewModel homeViewModel);
     }
 
@@ -91,16 +91,19 @@ class HomeViewModelAdapter extends RecyclerView.Adapter {
 
             int iconResourceId;
             if (homeViewModel.type() == HomeViewModel.Type.TRACKED_ENTITY) {
-                iconResourceId = R.drawable.ic_widgets_black;
+                iconResourceId = R.drawable.ic_person;
+                title.setText(String.format(title.getContext().getString(R.string.search_register_te),
+                        homeViewModel.title()));
+
             } else {
-                iconResourceId = R.drawable.ic_border_all;
+                iconResourceId = R.drawable.ic_single_event;
             }
 
             icon.setImageResource(iconResourceId);
         }
 
         @OnClick(R.id.container)
-        public void onHomeViewModelClick() {
+        void onHomeViewModelClick() {
             if (onHomeItemClickListener != null) {
                 onHomeItemClickListener.onHomeItemClicked(homeViewModel);
             }
